@@ -63,5 +63,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>access gallery for changing profile</string>
 </dict>
 </plist>

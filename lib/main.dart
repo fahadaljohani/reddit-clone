@@ -33,7 +33,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         .getUserDate(data.uid)
         .first;
     ref.read(userProvider.notifier).update((state) => userModel);
-    setState(() {});
+    // setState(() {});
   }
 
   @override
@@ -46,12 +46,14 @@ class _MyAppState extends ConsumerState<MyApp> {
             routerDelegate: RoutemasterDelegate(
               routesBuilder: (context) {
                 if (data != null) {
-                  getUserData(ref, data);
-                  if (userModel != null) {
+                  if (ref.watch(userProvider) != null) {
+                    // if (userModel != null) {
                     return loggedInRoute;
+                    // }
+                  } else {
+                    getUserData(ref, data);
                   }
                 }
-
                 return loggedOutRoute;
               },
             ),

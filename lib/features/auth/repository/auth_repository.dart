@@ -8,7 +8,7 @@ import 'package:reddit_tutorial/core/common/failure.dart';
 import 'package:reddit_tutorial/core/constants/constant.dart';
 import 'package:reddit_tutorial/core/constants/firebase_constant.dart';
 import 'package:reddit_tutorial/models/user_model.dart';
-import 'package:reddit_tutorial/providers/firebase_provider.dart';
+import 'package:reddit_tutorial/core/common/providers/firebase_provider.dart';
 import 'package:reddit_tutorial/core/common/type_dev.dart';
 
 final authRepositoryProvider = Provider(
@@ -81,5 +81,10 @@ class AuthRepository {
   Stream<UserModel> getUserData(String uid) {
     return _users.doc(uid).snapshots().map(
         (event) => UserModel.fromMap(event.data() as Map<String, dynamic>));
+  }
+
+  void logout() async {
+    _googleSignIn.signOut();
+    _auth.signOut();
   }
 }
