@@ -10,8 +10,8 @@ class ProfileDrawer extends ConsumerWidget {
     ref.read(authControllerProvider.notifier).logout();
   }
 
-  void navigateToProfileS(BuildContext context) {
-    Routemaster.of(context).push('/u/profile');
+  void navigateToProfileS(BuildContext context, String uid) {
+    Routemaster.of(context).push('/u/$uid');
   }
 
   @override
@@ -32,7 +32,7 @@ class ProfileDrawer extends ConsumerWidget {
           const SizedBox(height: 10),
           const Divider(),
           ListTile(
-            onTap: () => navigateToProfileS(context),
+            onTap: () => navigateToProfileS(context, user.uid),
             title: const Text('My Profile'),
             leading: const Icon(Icons.person),
           ),

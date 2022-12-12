@@ -6,7 +6,8 @@ import 'package:reddit_tutorial/features/community/screens/community_screen.dart
 import 'package:reddit_tutorial/features/community/screens/edit_community_screen.dart';
 import 'package:reddit_tutorial/features/community/screens/mod_tool_screen.dart';
 import 'package:reddit_tutorial/features/home/screens/home_screen.dart';
-import 'package:reddit_tutorial/features/profile/screens/profile_screen.dart';
+import 'package:reddit_tutorial/features/profile/screens/edit_user_profile.dart';
+import 'package:reddit_tutorial/features/profile/screens/user_profile_screen.dart';
 import 'package:routemaster/routemaster.dart';
 
 final loggedOutRoute = RouteMap(routes: {
@@ -40,7 +41,14 @@ final loggedInRoute = RouteMap(routes: {
           name: route.pathParameters['name']!,
         ),
       ),
-  '/u/profile': (_) => const MaterialPage(
-        child: ProfileScreen(),
+  '/u/:uid': (route) => MaterialPage(
+        child: UserProfileScreen(
+          uid: route.pathParameters['uid']!,
+        ),
+      ),
+  '/edit-profile/:uid': (route) => MaterialPage(
+        child: EditUserProfile(
+          uid: route.pathParameters['uid']!,
+        ),
       ),
 });
