@@ -9,12 +9,22 @@ import 'package:reddit_tutorial/theme/pallete.dart';
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
 
+  void signInAsGest(BuildContext context, WidgetRef ref) async {
+    ref.read(authControllerProvider.notifier).signInAsGest(context);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = ref.watch(authControllerProvider);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Pallete.blackColor,
+        actions: [
+          TextButton(
+            onPressed: () => signInAsGest(context, ref),
+            child: const Text('Skip'),
+          ),
+        ],
       ),
       body: isLoading
           ? const Loader()

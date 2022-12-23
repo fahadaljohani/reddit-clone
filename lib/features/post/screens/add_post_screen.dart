@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reddit_tutorial/theme/pallete.dart';
 import 'package:routemaster/routemaster.dart';
 
 class AddPostScreen extends ConsumerWidget {
@@ -11,6 +12,7 @@ class AddPostScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final currentTheme = ref.watch(themeNotifierProvider);
     double cardWidthHight = 120;
     double iconSize = 60;
     return Padding(
@@ -27,6 +29,7 @@ class AddPostScreen extends ConsumerWidget {
                 child: Icon(
                   Icons.image_outlined,
                   size: iconSize,
+                  color: Pallete.whiteColor,
                 ),
               ),
             ),
@@ -40,6 +43,7 @@ class AddPostScreen extends ConsumerWidget {
                 child: Icon(
                   Icons.font_download,
                   size: iconSize,
+                  color: Pallete.whiteColor,
                 ),
               ),
             ),
@@ -53,6 +57,7 @@ class AddPostScreen extends ConsumerWidget {
                 child: Icon(
                   Icons.link,
                   size: iconSize,
+                  color: Pallete.whiteColor,
                 ),
               ),
             ),

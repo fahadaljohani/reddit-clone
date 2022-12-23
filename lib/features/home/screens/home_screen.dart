@@ -38,11 +38,11 @@ class _HomeScreenState extends ConsumerState {
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.read(userProvider)!;
     final currentTheme = ref.watch(themeNotifierProvider);
-
+    final isGest = !user.isAuthenticated;
     int counter = 0;
     if (kDebugMode) print('home screen: ${counter++}');
-    final user = ref.read(userProvider)!;
     return Scaffold(
       appBar: AppBar(
         leading: Builder(
@@ -51,7 +51,10 @@ class _HomeScreenState extends ConsumerState {
             icon: const Icon(Icons.menu),
           ),
         ),
-        title: const Text('Home'),
+        title: Text(
+          'Home',
+          style: TextStyle(color: currentTheme.iconTheme.color),
+        ),
         actions: [
           IconButton(
             onPressed: () => searchCommunity(context, ref),
@@ -59,7 +62,7 @@ class _HomeScreenState extends ConsumerState {
           ),
           Builder(builder: (context) {
             return GestureDetector(
-              onTap: () => openEndDrawer(context),
+              onTap: () => isGest ? () {} : openEndDrawer(context),
               child: CircleAvatar(
                 backgroundImage: NetworkImage(user.profilePic),
               ),
@@ -70,16 +73,18 @@ class _HomeScreenState extends ConsumerState {
       drawer: const CommunityListDrawer(),
       endDrawer: const ProfileDrawer(),
       body: Constant.tabWidgets[_page],
-      bottomNavigationBar: CupertinoTabBar(
-        currentIndex: _page,
-        onTap: (value) => goTo(value),
-        activeColor: currentTheme.iconTheme.color,
-        backgroundColor: currentTheme.backgroundColor,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.add), label: ''),
-        ],
-      ),
+      bottomNavigationBar: isGest
+          ? null
+          : CupertinoTabBar(
+              currentIndex: _page,
+              onTap: (value) => goTo(value),
+              activeColor: currentTheme.iconTheme.color,
+              backgroundColor: currentTheme.backgroundColor,
+              items: const [
+                BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+                BottomNavigationBarItem(icon: Icon(Icons.add), label: ''),
+              ],
+            ),
     );
   }
 }

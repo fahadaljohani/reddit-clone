@@ -4,6 +4,7 @@ import 'package:reddit_tutorial/core/common/utils/utils.dart';
 import 'package:reddit_tutorial/features/auth/repository/auth_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_tutorial/models/user_model.dart';
+import 'package:routemaster/routemaster.dart';
 
 final authControllerProvider = StateNotifierProvider<AuthController, bool>(
   (ref) => AuthController(
@@ -40,6 +41,14 @@ class AuthController extends StateNotifier<bool> {
     res.fold((l) => showSnackBar(context, l.message), (r) {
       _ref.read(userProvider.notifier).update((state) => r);
     });
+  }
+
+  void signInAsGest(BuildContext context) async {
+    state = true;
+    final res = await _authRepository.signInWithGest();
+    state = false;
+    res.fold((l) => showSnackBar(context, l.message),
+        (r) => _ref.read(userProvider.notifier).update((state) => r));
   }
 
   Stream<User?> authStateChange() {

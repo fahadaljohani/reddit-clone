@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:reddit_tutorial/core/common/enums/enums.dart';
 import 'package:reddit_tutorial/core/common/failure.dart';
 import 'package:reddit_tutorial/core/common/providers/firebase_provider.dart';
 import 'package:reddit_tutorial/core/common/type_dev.dart';
@@ -22,6 +23,18 @@ class UserProfileRepository {
   FutureVoid updateUserProfile(UserModel user) async {
     try {
       return right(_users.doc(user.uid).update(user.toMap()));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  FutureVoid updateUserKarma(UserModel user) async {
+    try {
+      return right(_users.doc(user.uid).update({
+        'karma': user.karma,
+      }));
     } on FirebaseException catch (e) {
       throw e.message!;
     } catch (e) {

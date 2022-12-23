@@ -87,4 +87,24 @@ class AuthRepository {
     _googleSignIn.signOut();
     _auth.signOut();
   }
+
+  FutureEither<UserModel> signInWithGest() async {
+    try {
+      final credential = await _auth.signInAnonymously();
+      UserModel user = UserModel(
+          uid: credential.user!.uid,
+          name: 'Gest',
+          profilePic: Constant.avatarDefault,
+          banner: Constant.bannerDefault,
+          isAuthenticated: false,
+          karma: 0,
+          awards: []);
+      await _users.doc(user.uid).set(user.toMap());
+      return right(user);
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
 }

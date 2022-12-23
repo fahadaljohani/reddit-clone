@@ -40,7 +40,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     return ref.watch(authStateChangeProvider).when(
           data: (data) => MaterialApp.router(
-            title: 'reddit tutorial',
+            title: 'My reddit tutorial',
             debugShowCheckedModeBanner: false,
             theme: ref.watch(themeNotifierProvider),
             routerDelegate: RoutemasterDelegate(
