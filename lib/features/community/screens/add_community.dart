@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reddit_tutorial/core/common/utils/lang/app_localizations.dart';
 import 'package:reddit_tutorial/features/community/controller/community_contoller.dart';
 
 class AddCommunity extends ConsumerStatefulWidget {
@@ -29,15 +30,15 @@ class _AddCommunityState extends ConsumerState<AddCommunity> {
     // final isLoading = ref.watch(communityControllerProvider);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('create community'),
+        title: Text('Create a community'.tr(context)),
         centerTitle: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const SizedBox(height: 20),
-          const Text(
-            'community name',
+          Text(
+            'community name'.tr(context),
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -47,7 +48,7 @@ class _AddCommunityState extends ConsumerState<AddCommunity> {
           TextField(
             controller: communityNameController,
             decoration: InputDecoration(
-              hintText: '/r/Enter community name',
+              hintText: '/r/Enter community name'.tr(context),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
                 borderSide: BorderSide.none,
@@ -66,9 +67,9 @@ class _AddCommunityState extends ConsumerState<AddCommunity> {
                 borderRadius: BorderRadius.circular(15),
               ),
             ),
-            child: const Text(
-              'Create Community',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            child: Text(
+              'Create Community'.tr(context),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
         ]),

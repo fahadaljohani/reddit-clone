@@ -46,6 +46,10 @@ final getPostCommentsProvider = StreamProvider.family((ref, String postId) {
   return ref.watch(postControllerProvider.notifier).getPostComments(postId);
 });
 
+final getGestPostsProvider = StreamProvider((ref) {
+  return ref.watch(postControllerProvider.notifier).getGestPosts();
+});
+
 class PostController extends StateNotifier<bool> {
   final PostRepository _postRepository;
   final StorageRepository _storageRepository;
@@ -243,5 +247,9 @@ class PostController extends StateNotifier<bool> {
         return state;
       });
     });
+  }
+
+  Stream<List<Post>> getGestPosts() {
+    return _postRepository.getGestPosts();
   }
 }

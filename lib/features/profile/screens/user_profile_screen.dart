@@ -1,8 +1,11 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_tutorial/core/common/error_text.dart';
 import 'package:reddit_tutorial/core/common/loader.dart';
 import 'package:reddit_tutorial/core/common/post_card.dart';
+import 'package:reddit_tutorial/core/common/utils/lang/app_localizations.dart';
 import 'package:reddit_tutorial/features/auth/controller/auth_controller.dart';
 import 'package:reddit_tutorial/features/post/controller/post_controller.dart';
 import 'package:routemaster/routemaster.dart';
@@ -17,6 +20,8 @@ class UserProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider)!;
+    final isGest = !user.isAuthenticated;
     return ref.watch(getUserDateProvider(uid)).when(
         data: (user) {
           return Scaffold(
@@ -34,7 +39,10 @@ class UserProfileScreen extends ConsumerWidget {
                       ),
                       Container(
                         padding: const EdgeInsets.all(20).copyWith(bottom: 70),
-                        alignment: Alignment.bottomLeft,
+                        alignment:
+                            window.locale.toString().substring(0, 2) == 'ar'
+                                ? Alignment.bottomRight
+                                : Alignment.bottomLeft,
                         child: CircleAvatar(
                           backgroundImage: NetworkImage(user.profilePic),
                           radius: 35,
@@ -42,17 +50,22 @@ class UserProfileScreen extends ConsumerWidget {
                       ),
                       Container(
                         padding: const EdgeInsets.all(16).copyWith(bottom: 20),
-                        alignment: Alignment.bottomLeft,
+                        alignment:
+                            window.locale.toString().substring(0, 2) == 'ar'
+                                ? Alignment.bottomRight
+                                : Alignment.bottomLeft,
                         child: OutlinedButton(
-                          onPressed: () =>
-                              navigateToEditUserProfile(context, user.uid),
+                          onPressed: isGest
+                              ? () {}
+                              : () =>
+                                  navigateToEditUserProfile(context, user.uid),
                           style: OutlinedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20)),
                           ),
-                          child: const Text(
-                            'Edit Profile',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                          child: Text(
+                            'Edit Profile'.tr(context),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
                       )

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_tutorial/core/common/error_text.dart';
 import 'package:reddit_tutorial/core/common/loader.dart';
 import 'package:reddit_tutorial/core/common/sign_in_button.dart';
+import 'package:reddit_tutorial/core/common/utils/lang/app_localizations.dart';
 import 'package:reddit_tutorial/features/auth/controller/auth_controller.dart';
 import 'package:reddit_tutorial/features/community/controller/community_contoller.dart';
 import 'package:reddit_tutorial/models/community.dart';
@@ -21,7 +22,7 @@ class CommunityListDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.read(userProvider)!;
+    final user = ref.watch(userProvider)!;
     final isGest = !user.isAuthenticated;
     print('drawer screen');
     return Drawer(
@@ -29,9 +30,9 @@ class CommunityListDrawer extends ConsumerWidget {
         child: Column(
           children: [
             isGest
-                ? const SignInButton()
+                ? const SignInButton(isFromLogin: false)
                 : ListTile(
-                    title: const Text('Create a community'),
+                    title: Text("Create a community".tr(context)),
                     leading: const Icon(Icons.add),
                     onTap: () => navigateToCreateCommunity(context),
                   ),

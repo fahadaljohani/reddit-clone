@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reddit_tutorial/core/common/utils/lang/app_localizations.dart';
 import 'package:reddit_tutorial/features/auth/controller/auth_controller.dart';
 import 'package:reddit_tutorial/theme/pallete.dart';
 import 'package:routemaster/routemaster.dart';
@@ -38,7 +41,7 @@ class ProfileDrawer extends ConsumerWidget {
           const Divider(),
           ListTile(
             onTap: () => navigateToProfileS(context, user.uid),
-            title: const Text('My Profile'),
+            title: Text('My Profile'.tr(context)),
             leading: const Icon(Icons.person),
           ),
           ListTile(
@@ -47,7 +50,7 @@ class ProfileDrawer extends ConsumerWidget {
               Icons.logout,
               color: Colors.red,
             ),
-            title: const Text('Log Out'),
+            title: Text('Log Out'.tr(context)),
           ),
           const SizedBox(height: 10),
           Switch.adaptive(

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_tutorial/core/common/loader.dart';
+import 'package:reddit_tutorial/core/common/utils/lang/app_localizations.dart';
 import 'package:reddit_tutorial/core/common/utils/utils.dart';
 import 'package:reddit_tutorial/core/constants/constant.dart';
 import 'package:reddit_tutorial/features/auth/controller/auth_controller.dart';
@@ -70,10 +71,11 @@ class _EditUserProfileState extends ConsumerState<EditUserProfile> {
     final currentTheme = ref.watch(themeNotifierProvider);
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Edit Proifle'),
+          title: Text('Edit Profile'.tr(context)),
           centerTitle: false,
           actions: [
-            TextButton(onPressed: udpateUserProfile, child: const Text('Save'))
+            TextButton(
+                onPressed: udpateUserProfile, child: Text('Save'.tr(context)))
           ]),
       body: isLoading
           ? const Loader()
@@ -131,7 +133,7 @@ class _EditUserProfileState extends ConsumerState<EditUserProfile> {
                   TextField(
                     controller: usernameController,
                     decoration: InputDecoration(
-                        hintText: 'Name',
+                        hintText: 'Name'.tr(context),
                         filled: true,
                         border: InputBorder.none,
                         focusedBorder: OutlineInputBorder(

@@ -36,16 +36,25 @@ class AuthRepository {
 
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
-  FutureEither<UserModel> signInWithGoogle() async {
+  FutureEither<UserModel> signInWithGoogle(bool isFromLogin) async {
     try {
+      UserCredential userCredential;
       GoogleSignInAccount? userGoogle = await _googleSignIn.signIn();
       final googleAuth = await userGoogle?.authentication;
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
-      final userCredential = await _auth.signInWithCredential(credential);
+
+      if (isFromLogin) {
+        userCredential = await _auth.signInWithCredential(credential);
+      } else {
+        userCredential =
+            await _auth.currentUser!.linkWithCredential(credential);
+      }
+
       UserModel userModel;
+
       if (userCredential.additionalUserInfo!.isNewUser) {
         userModel = UserModel(
           uid: userCredential.user!.uid,
@@ -66,13 +75,49 @@ class AuthRepository {
           ],
         );
         await _users.doc(userModel.uid).set(userModel.toMap());
+      } else if (!isFromLogin) {
+        userModel = UserModel(
+          uid: userCredential.user!.uid,
+          name: userCredential.user!.displayName ?? 'No name',
+          profilePic: userCredential.user!.photoURL ?? Constant.avatarDefault,
+          banner: Constant.bannerDefault,
+          isAuthenticated: true,
+          karma: 0,
+          awards: [
+            'awesomeAns',
+            'gold',
+            'platinum',
+            'helpful',
+            'plusone',
+            'rocket',
+            'thankyou',
+            'til',
+          ],
+        );
+        await _users.doc(userModel.uid).update(userModel.toMap());
       } else {
         userModel = await getUserData(userCredential.user!.uid).first;
       }
       return right(userModel);
     } on FirebaseException catch (e) {
       if (kDebugMode) print('debug: ${e.message}');
-      throw e.message!;
+      switch (e.code) {
+        case "provider-already-linked":
+          throw ("The provider has already been linked to the user.");
+
+        case "invalid-credential":
+          throw ("The provider's credential is not valid.");
+
+        case "credential-already-in-use":
+          return left(Failure(
+              "The account corresponding to the credential already exists, "
+              "or is already linked to a Firebase User."));
+
+        // See the API reference for the full list of error codes.
+        default:
+          throw ("Unknown error.");
+      }
+      // throw e.message!;
     } catch (e) {
       return left(Failure(e.toString()));
     }

@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:reddit_tutorial/core/common/utils/lang/app_localizations.dart';
 import 'package:reddit_tutorial/models/comment.dart';
 
 class CommentCard extends ConsumerWidget {
@@ -35,7 +36,7 @@ class CommentCard extends ConsumerWidget {
           Row(
             children: [
               IconButton(onPressed: () {}, icon: const Icon(Icons.reply)),
-              const Text('Reply'),
+              Text('Reply'.tr(context)),
             ],
           ),
         ],

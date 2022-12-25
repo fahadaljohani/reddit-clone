@@ -49,6 +49,8 @@ dependencies:
   any_link_preview: ^2.0.9
   shared_preferences: ^2.0.15
   uuid: ^3.0.7
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +80,8 @@ flutter:
     - assets/images/loginEmote.png
     - assets/images/logo.png
     - assets/images/awards/
+    - assets/lang/en.json
+    - assets/lang/ar.json
 
   #   - images/a_dot_ham.jpeg
 

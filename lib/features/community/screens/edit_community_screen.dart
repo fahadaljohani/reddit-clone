@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_tutorial/core/common/error_text.dart';
 import 'package:reddit_tutorial/core/common/loader.dart';
+import 'package:reddit_tutorial/core/common/utils/lang/app_localizations.dart';
 import 'package:reddit_tutorial/core/common/utils/utils.dart';
 import 'package:reddit_tutorial/core/constants/constant.dart';
 import 'package:reddit_tutorial/features/community/controller/community_contoller.dart';
@@ -57,12 +58,12 @@ class _EditCommunityScreenState extends ConsumerState<EditCommunityScreen> {
                 return Scaffold(
                   backgroundColor: currentTheme.backgroundColor,
                   appBar: AppBar(
-                    title: const Text('Edit Community'),
+                    title: Text('Edit Community'.tr(context)),
                     centerTitle: false,
                     actions: [
                       TextButton(
                           onPressed: () => saveCommunity(community),
-                          child: const Text('Save'))
+                          child: Text('Save'.tr(context)))
                     ],
                   ),
                   body: Padding(

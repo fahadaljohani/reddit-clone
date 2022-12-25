@@ -1,7 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reddit_tutorial/core/common/utils/lang/app_localizations.dart';
+import 'package:reddit_tutorial/core/common/widgets/abstract_navigation_bar.dart';
 import 'package:reddit_tutorial/core/constants/constant.dart';
 import 'package:reddit_tutorial/features/auth/controller/auth_controller.dart';
 import 'package:reddit_tutorial/features/community/screens/comunity_drawer.dart';
@@ -38,7 +39,7 @@ class _HomeScreenState extends ConsumerState {
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.read(userProvider)!;
+    final user = ref.watch(userProvider)!;
     final currentTheme = ref.watch(themeNotifierProvider);
     final isGest = !user.isAuthenticated;
     int counter = 0;
@@ -52,7 +53,7 @@ class _HomeScreenState extends ConsumerState {
           ),
         ),
         title: Text(
-          'Home',
+          'home'.tr(context),
           style: TextStyle(color: currentTheme.iconTheme.color),
         ),
         actions: [
@@ -62,7 +63,7 @@ class _HomeScreenState extends ConsumerState {
           ),
           Builder(builder: (context) {
             return GestureDetector(
-              onTap: () => isGest ? () {} : openEndDrawer(context),
+              onTap: () => openEndDrawer(context),
               child: CircleAvatar(
                 backgroundImage: NetworkImage(user.profilePic),
               ),
@@ -71,11 +72,11 @@ class _HomeScreenState extends ConsumerState {
         ],
       ),
       drawer: const CommunityListDrawer(),
-      endDrawer: const ProfileDrawer(),
+      endDrawer: isGest ? null : const ProfileDrawer(),
       body: Constant.tabWidgets[_page],
       bottomNavigationBar: isGest
           ? null
-          : CupertinoTabBar(
+          : AbstractPlatfrom(Theme.of(context).platform).navigtionBar(
               currentIndex: _page,
               onTap: (value) => goTo(value),
               activeColor: currentTheme.iconTheme.color,

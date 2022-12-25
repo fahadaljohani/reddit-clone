@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:reddit_tutorial/core/common/utils/lang/app_localizations.dart';
 import 'package:reddit_tutorial/core/constants/constant.dart';
 import 'package:reddit_tutorial/features/auth/controller/auth_controller.dart';
 import 'package:reddit_tutorial/theme/pallete.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SignInButton extends ConsumerWidget {
-  const SignInButton({super.key});
+  final bool isFromLogin;
+  const SignInButton({super.key, this.isFromLogin = true});
 
   void signInWithGoogle(BuildContext context, WidgetRef ref) {
-    ref.read(authControllerProvider.notifier).signInWithGoogle(context);
+    ref
+        .read(authControllerProvider.notifier)
+        .signInWithGoogle(context, isFromLogin);
   }
 
   @override
@@ -21,9 +25,9 @@ class SignInButton extends ConsumerWidget {
           Constant.googlePath,
           width: 35,
         ),
-        label: const Text(
-          'google sign in',
-          style: TextStyle(
+        label: Text(
+          'google sign in'.tr(context),
+          style: const TextStyle(
             fontSize: 18,
           ),
         ),

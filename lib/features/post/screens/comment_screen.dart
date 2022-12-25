@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_tutorial/core/common/error_text.dart';
 import 'package:reddit_tutorial/core/common/loader.dart';
 import 'package:reddit_tutorial/core/common/post_card.dart';
+import 'package:reddit_tutorial/core/common/utils/lang/app_localizations.dart';
+import 'package:reddit_tutorial/features/auth/controller/auth_controller.dart';
 import 'package:reddit_tutorial/features/post/controller/post_controller.dart';
 import 'package:reddit_tutorial/features/post/widgets/comment_card.dart';
 
@@ -34,6 +36,8 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(userProvider)!;
+    final isGest = !user.isAuthenticated;
     return Scaffold(
       appBar: AppBar(),
       body: ref.watch(getPostByIdProvider(widget.postId)).when(
@@ -42,14 +46,16 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
               children: [
                 PostCard(post: post),
                 const SizedBox(height: 10),
-                TextField(
-                  onSubmitted: (value) => addComment(),
-                  controller: commentController,
-                  decoration: const InputDecoration(
-                      hintText: 'What are your thought?',
-                      border: InputBorder.none,
-                      filled: true),
-                ),
+                isGest
+                    ? const SizedBox()
+                    : TextField(
+                        onSubmitted: (value) => addComment(),
+                        controller: commentController,
+                        decoration: InputDecoration(
+                            hintText: 'What are your thought?'.tr(context),
+                            border: InputBorder.none,
+                            filled: true),
+                      ),
                 const SizedBox(height: 10),
                 ref.watch(getPostCommentsProvider(widget.postId)).when(
                     data: (comments) {

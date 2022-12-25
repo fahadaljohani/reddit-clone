@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_tutorial/core/common/error_text.dart';
 import 'package:reddit_tutorial/core/common/loader.dart';
+import 'package:reddit_tutorial/core/common/utils/lang/app_localizations.dart';
 import 'package:reddit_tutorial/features/auth/controller/auth_controller.dart';
 import 'package:reddit_tutorial/firebase_options.dart';
 import 'package:reddit_tutorial/models/user_model.dart';
 import 'package:reddit_tutorial/router.dart';
 import 'package:reddit_tutorial/theme/pallete.dart';
 import 'package:routemaster/routemaster.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +34,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         .watch(authControllerProvider.notifier)
         .getUserDate(data.uid)
         .first;
-    ref.read(userProvider.notifier).update((state) => userModel);
+    ref.watch(userProvider.notifier).update((state) => userModel);
     // setState(() {});
   }
 
@@ -40,6 +42,23 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     return ref.watch(authStateChangeProvider).when(
           data: (data) => MaterialApp.router(
+            supportedLocales: const [Locale('en'), Locale('ar')],
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate
+            ],
+            localeResolutionCallback: (deviceLocale, supportedLocales) {
+              for (var locale in supportedLocales) {
+                if (deviceLocale != null &&
+                    deviceLocale.languageCode == locale.languageCode) {
+                  return deviceLocale;
+                }
+              }
+
+              return supportedLocales.first;
+            },
             title: 'My reddit tutorial',
             debugShowCheckedModeBanner: false,
             theme: ref.watch(themeNotifierProvider),

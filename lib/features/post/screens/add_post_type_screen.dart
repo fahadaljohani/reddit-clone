@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_tutorial/core/common/error_text.dart';
 import 'package:reddit_tutorial/core/common/loader.dart';
+import 'package:reddit_tutorial/core/common/utils/lang/app_localizations.dart';
 import 'package:reddit_tutorial/core/common/utils/utils.dart';
 import 'package:reddit_tutorial/features/community/controller/community_contoller.dart';
 import 'package:reddit_tutorial/features/post/controller/post_controller.dart';
@@ -37,6 +38,8 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
           selectedCommunity!,
           titleController.text.trim(),
           descriptionController.text.trim());
+    } else {
+      showSnackBar(context, 'fill up all fields'.tr(context));
     }
   }
 
@@ -46,6 +49,8 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
         titleController.text.trim().isNotEmpty) {
       ref.read(postControllerProvider.notifier).shareImagePost(context,
           selectedCommunity!, titleController.text.trim(), bannerFile!);
+    } else {
+      showSnackBar(context, 'fill up all fields'.tr(context));
     }
   }
 
@@ -58,6 +63,8 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
           selectedCommunity!,
           titleController.text.trim(),
           linkController.text.trim());
+    } else {
+      showSnackBar(context, 'fill up all fields'.tr(context));
     }
   }
 
@@ -97,26 +104,31 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
 
     final currentTheme = ref.watch(themeNotifierProvider);
     return Scaffold(
-      appBar: AppBar(title: Text('Post ${widget.type}'), actions: [
-        TextButton(
-          onPressed: save,
-          child: const Text('share'),
-        ),
-      ]),
+      appBar: AppBar(
+          title: Text(
+            widget.type.tr(context),
+          ),
+          actions: [
+            TextButton(
+              onPressed: save,
+              child: Text('share'.tr(context)),
+            ),
+          ]),
       body: isLoading
           ? const Loader()
           : Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextField(
                     controller: titleController,
                     maxLength: 30,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       filled: true,
-                      hintText: 'Enter title here',
+                      hintText: 'Enter title here'.tr(context),
                       border: InputBorder.none,
-                      contentPadding: EdgeInsets.all(18),
+                      contentPadding: const EdgeInsets.all(18),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -150,40 +162,41 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
                     TextField(
                       controller: descriptionController,
                       maxLines: 5,
-                      decoration: const InputDecoration(
-                          hintText: 'Enter description here',
+                      decoration: InputDecoration(
+                          hintText: 'Enter description here'.tr(context),
                           border: InputBorder.none,
                           filled: true,
-                          contentPadding: EdgeInsets.all(18)),
+                          contentPadding: const EdgeInsets.all(18)),
                     ),
                   if (isTypeLink)
                     TextField(
                       controller: linkController,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter link here',
+                      decoration: InputDecoration(
+                        hintText: 'Enter link here'.tr(context),
                         filled: true,
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(18),
+                        contentPadding: const EdgeInsets.all(18),
                       ),
                     ),
                   const SizedBox(height: 10),
-                  const Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Text('Select Community'),
-                  ),
+                  Text('Select Community'.tr(context)),
                   ref.watch(getUserCommunitiesProvider).when(
                       data: (communities) {
-                        return DropdownButton(
-                            value: selectedCommunity ?? communities[0],
-                            items: communities
-                                .map((e) => DropdownMenuItem(
-                                    value: e, child: Text(e.name)))
-                                .toList(),
-                            onChanged: (community) {
-                              setState(() {
-                                selectedCommunity = community;
-                              });
-                            });
+                        return communities.isEmpty
+                            ? const SizedBox()
+                            : Center(
+                                child: DropdownButton(
+                                    value: selectedCommunity ?? communities[0],
+                                    items: communities
+                                        .map((e) => DropdownMenuItem(
+                                            value: e, child: Text(e.name)))
+                                        .toList(),
+                                    onChanged: (community) {
+                                      setState(() {
+                                        selectedCommunity = community;
+                                      });
+                                    }),
+                              );
                       },
                       error: (error, stackTrace) =>
                           ErrorText(text: error.toString()),

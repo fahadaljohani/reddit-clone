@@ -1,9 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_tutorial/core/common/error_text.dart';
 import 'package:reddit_tutorial/core/common/loader.dart';
 import 'package:reddit_tutorial/core/common/post_card.dart';
+import 'package:reddit_tutorial/core/common/utils/lang/app_localizations.dart';
 import 'package:reddit_tutorial/features/auth/controller/auth_controller.dart';
 import 'package:reddit_tutorial/features/community/controller/community_contoller.dart';
 import 'package:reddit_tutorial/features/post/controller/post_controller.dart';
@@ -29,6 +32,7 @@ class CommunityScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (kDebugMode) print('community screen: $name');
     final user = ref.watch(userProvider)!;
+    final isGest = !user.isAuthenticated;
     return Scaffold(
       body: ref.watch(getCommunityByNameProvider(name)).when(
             data: (community) {
@@ -51,7 +55,10 @@ class CommunityScreen extends ConsumerWidget {
                       sliver: SliverList(
                           delegate: SliverChildListDelegate([
                         Align(
-                          alignment: Alignment.topLeft,
+                          alignment:
+                              window.locale.toString().substring(0, 2) == 'ar'
+                                  ? Alignment.topRight
+                                  : Alignment.topLeft,
                           child: CircleAvatar(
                             backgroundImage: NetworkImage(community.avatar),
                             radius: 35,
@@ -61,42 +68,55 @@ class CommunityScreen extends ConsumerWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('r/${community.name}',
-                                style: const TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold)),
-                            community.mods.contains(user.uid)
-                                ? OutlinedButton(
-                                    onPressed: () =>
-                                        navigateToModTools(context),
-                                    style: OutlinedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
+                            Text(
+                              'r/${community.name}',
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            if (!isGest)
+                              community.mods.contains(user.uid)
+                                  ? OutlinedButton(
+                                      onPressed: () =>
+                                          navigateToModTools(context),
+                                      style: OutlinedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 25),
                                       ),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 25),
-                                    ),
-                                    child: const Text('Mod Tools'),
-                                  )
-                                : OutlinedButton(
-                                    onPressed: () => joinCommunity(
-                                        ref, context, community, user.uid),
-                                    style: OutlinedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
+                                      child: Text('Mod Tools'.tr(context)),
+                                    )
+                                  : OutlinedButton(
+                                      onPressed: () => joinCommunity(
+                                          ref, context, community, user.uid),
+                                      style: OutlinedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 25),
                                       ),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 25),
+                                      child: Text(
+                                          community.members.contains(user.uid)
+                                              ? 'Joined'.tr(context)
+                                              : 'Join'.tr(context)),
                                     ),
-                                    child: Text(
-                                        community.members.contains(user.uid)
-                                            ? 'Joined'
-                                            : 'Join'),
-                                  ),
                           ],
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
-                          child: Text('${community.members.length} members'),
+                          child: Row(
+                            children: [
+                              Text(community.members.length.toString()),
+                              const SizedBox(width: 3),
+                              Text(community.members.length == 1
+                                  ? 'member'.tr(context)
+                                  : 'members'.tr(context))
+                            ],
+                          ),
                         )
                       ])),
                     ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_tutorial/core/common/loader.dart';
 import 'package:reddit_tutorial/core/common/sign_in_button.dart';
+import 'package:reddit_tutorial/core/common/utils/lang/app_localizations.dart';
 import 'package:reddit_tutorial/core/constants/constant.dart';
 import 'package:reddit_tutorial/features/auth/controller/auth_controller.dart';
 import 'package:reddit_tutorial/theme/pallete.dart';
@@ -16,13 +17,14 @@ class LoginScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = ref.watch(authControllerProvider);
+    final currenTheme = ref.watch(themeNotifierProvider);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Pallete.blackColor,
+        backgroundColor: currenTheme.backgroundColor,
         actions: [
           TextButton(
             onPressed: () => signInAsGest(context, ref),
-            child: const Text('Skip'),
+            child: Text('Skip'.tr(context)),
           ),
         ],
       ),
@@ -35,9 +37,10 @@ class LoginScreen extends ConsumerWidget {
                 width: 40,
               ),
               const SizedBox(height: 18),
-              const Text(
-                'Dive into any thing',
-                style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+              Text(
+                'Dive into any thing'.tr(context),
+                style:
+                    const TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 30),
               Image.asset(

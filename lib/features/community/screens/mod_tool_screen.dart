@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reddit_tutorial/core/common/utils/lang/app_localizations.dart';
 import 'package:routemaster/routemaster.dart';
 
 class ModToolScreen extends ConsumerWidget {
@@ -18,18 +19,18 @@ class ModToolScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mod Tools'),
+        title: Text('Mod Tools'.tr(context)),
       ),
       body: Column(children: [
         ListTile(
           onTap: () => navigateToAddMod(context),
           leading: const Icon(Icons.add_moderator),
-          title: const Text('Add Moderator'),
+          title: Text('Add Moderator'.tr(context)),
         ),
         ListTile(
           onTap: () => navigateToEditCommunity(context),
           leading: const Icon(Icons.edit),
-          title: const Text('Edit Community'),
+          title: Text('Edit Community'.tr(context)),
         ),
       ]),
     );

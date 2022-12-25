@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_tutorial/core/common/error_text.dart';
 import 'package:reddit_tutorial/core/common/loader.dart';
+import 'package:reddit_tutorial/core/common/utils/lang/app_localizations.dart';
 import 'package:reddit_tutorial/core/constants/constant.dart';
 import 'package:reddit_tutorial/features/auth/controller/auth_controller.dart';
 import 'package:reddit_tutorial/features/community/controller/community_contoller.dart';
@@ -53,6 +54,7 @@ class PostCard extends ConsumerWidget {
     final isTypeLink = post.type == 'link';
     final currentTheme = ref.watch(themeNotifierProvider);
     final user = ref.watch(userProvider)!;
+    final isGest = !user.isAuthenticated;
     return Container(
       decoration: BoxDecoration(color: currentTheme.cardColor),
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -98,8 +100,10 @@ class PostCard extends ConsumerWidget {
               ),
               if (post.uid == user.uid)
                 IconButton(
-                    onPressed: () =>
-                        deletePost(context: context, ref: ref, postId: post.id),
+                    onPressed: isGest
+                        ? () {}
+                        : () => deletePost(
+                            context: context, ref: ref, postId: post.id),
                     icon: Icon(
                       Icons.delete,
                       color: Pallete.redColor,
@@ -164,7 +168,7 @@ class PostCard extends ConsumerWidget {
               Row(
                 children: [
                   IconButton(
-                    onPressed: () => upvotes(ref),
+                    onPressed: isGest ? () {} : () => upvotes(ref),
                     icon: Icon(
                       Constant.up,
                       color: post.upvotes.contains(user.uid)
@@ -174,12 +178,12 @@ class PostCard extends ConsumerWidget {
                   ),
                   Text(
                     post.upvotes.length - post.downvotes.length == 0
-                        ? 'Vote'
+                        ? 'Vote'.tr(context)
                         : ('${post.upvotes.length - post.downvotes.length}'),
                     style: const TextStyle(color: Pallete.whiteColor),
                   ),
                   IconButton(
-                    onPressed: () => downvotes(ref),
+                    onPressed: isGest ? () {} : () => downvotes(ref),
                     icon: Icon(Constant.down,
                         color: post.downvotes.contains(user.uid)
                             ? Pallete.blueColor
@@ -198,7 +202,7 @@ class PostCard extends ConsumerWidget {
                     const SizedBox(width: 5),
                     Text(
                       post.commentCount == 0
-                          ? 'Comment'
+                          ? 'Comment'.tr(context)
                           : post.commentCount.toString(),
                       style: const TextStyle(color: Pallete.whiteColor),
                     ),
@@ -209,8 +213,12 @@ class PostCard extends ConsumerWidget {
                   data: (community) {
                     return community.mods.contains(user.uid)
                         ? IconButton(
-                            onPressed: () => deletePost(
-                                context: context, ref: ref, postId: post.id),
+                            onPressed: isGest
+                                ? () {}
+                                : () => deletePost(
+                                    context: context,
+                                    ref: ref,
+                                    postId: post.id),
                             icon: const Icon(
                               Icons.admin_panel_settings,
                               color: Pallete.whiteColor,
@@ -222,37 +230,41 @@ class PostCard extends ConsumerWidget {
                       ErrorText(text: error.toString()),
                   loading: () => const Loader()),
               IconButton(
-                  onPressed: () => showDialog(
-                      context: context,
-                      builder: (context) => Dialog(
-                            child: GestureDetector(
-                              onTap: () {},
-                              child: Padding(
-                                padding: const EdgeInsets.all(20),
-                                child: GridView.builder(
-                                  shrinkWrap: true,
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 4,
-                                  ),
-                                  itemCount: user.awards.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    final award = user.awards[index];
-                                    return GestureDetector(
-                                      onTap: () =>
-                                          awardPost(context, ref, post, award),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Image.asset(
-                                            Constant.awards[award]!),
+                  onPressed: isGest
+                      ? () {}
+                      : () => showDialog(
+                          context: context,
+                          builder: (context) => Dialog(
+                                child: GestureDetector(
+                                  onTap: () {},
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: GridView.builder(
+                                      shrinkWrap: true,
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 4,
                                       ),
-                                    );
-                                  },
+                                      itemCount: user.awards.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        final award = user.awards[index];
+                                        return GestureDetector(
+                                          onTap: isGest
+                                              ? () {}
+                                              : () => awardPost(
+                                                  context, ref, post, award),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Image.asset(
+                                                Constant.awards[award]!),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          )),
+                              )),
                   icon: const Icon(Icons.card_giftcard_outlined))
             ],
           ),
