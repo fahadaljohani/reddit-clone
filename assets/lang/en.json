@@ -31,6 +31,14 @@
     "Add Moderator":"Add Moderator",
     "Skip":"Skip",
     "Dive into any thing":"Dive into any thing",
-    "google sign in":"google sign in"
+    "google sign in":"google sign in",
 
+    "post deleted successfully":"post deleted successfully",
+    "link shared successfully":"link shared successfully",
+    "Image shared successfully":"Image shared successfully",
+    "shared successfully":"shared successfully",
+    "community created successfully":"community created successfully",
+    "user removed from community":"user removed from community",
+    "user joined to community":"user joined to community",
+    "add moderator successfully":"add moderator successfully"
 }

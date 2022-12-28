@@ -9,6 +9,7 @@ import 'package:reddit_tutorial/features/community/screens/comunity_drawer.dart'
 import 'package:reddit_tutorial/features/community/screens/profile_drawer.dart';
 import 'package:reddit_tutorial/features/home/delegate/search_home_screen_delegate.dart';
 import 'package:reddit_tutorial/theme/pallete.dart';
+import 'package:routemaster/routemaster.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -29,6 +30,10 @@ class _HomeScreenState extends ConsumerState {
 
   void searchCommunity(BuildContext context, WidgetRef ref) {
     showSearch(context: context, delegate: SearchHomeScreenDelegate(ref: ref));
+  }
+
+  void navigateToAddPostScreen() {
+    Routemaster.of(context).push('/add-post');
   }
 
   void goTo(int page) {
@@ -61,6 +66,11 @@ class _HomeScreenState extends ConsumerState {
             onPressed: () => searchCommunity(context, ref),
             icon: const Icon(Icons.search),
           ),
+          kIsWeb
+              ? IconButton(
+                  onPressed: navigateToAddPostScreen,
+                  icon: const Icon(Icons.add))
+              : const SizedBox(),
           Builder(builder: (context) {
             return GestureDetector(
               onTap: () => openEndDrawer(context),
@@ -74,7 +84,7 @@ class _HomeScreenState extends ConsumerState {
       drawer: const CommunityListDrawer(),
       endDrawer: isGest ? null : const ProfileDrawer(),
       body: Constant.tabWidgets[_page],
-      bottomNavigationBar: isGest
+      bottomNavigationBar: isGest || kIsWeb
           ? null
           : AbstractPlatfrom(Theme.of(context).platform).navigtionBar(
               currentIndex: _page,

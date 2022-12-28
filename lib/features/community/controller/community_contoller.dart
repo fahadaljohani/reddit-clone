@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_tutorial/core/common/providers/firestorage_repository_provider.dart';
@@ -9,6 +10,7 @@ import 'package:reddit_tutorial/features/auth/controller/auth_controller.dart';
 import 'package:reddit_tutorial/features/community/repository/community_repository.dart';
 import 'package:reddit_tutorial/models/community.dart';
 import 'package:routemaster/routemaster.dart';
+import 'package:uuid/uuid.dart';
 
 final communityControllerProvider =
     StateNotifierProvider<CommunityController, bool>((ref) {
@@ -29,10 +31,8 @@ final searchCommunityProvider = StreamProvider.family((ref, String query) {
 });
 
 final getCommunityByNameProvider =
-    StreamProvider.family.autoDispose((ref, String name) {
-  return ref
-      .watch(communityControllerProvider.notifier)
-      .getCommunityByName(name);
+    StreamProvider.family.autoDispose((ref, String id) {
+  return ref.watch(communityControllerProvider.notifier).getCommunityByName(id);
 });
 
 class CommunityController extends StateNotifier<bool> {
@@ -50,9 +50,10 @@ class CommunityController extends StateNotifier<bool> {
     BuildContext context,
   ) async {
     state = true;
+    final id = const Uuid().v1();
     final uid = _ref.read(userProvider)?.uid ?? '';
     Community community = Community(
-      id: name,
+      id: id,
       name: name,
       banner: Constant.bannerDefault,
       avatar: Constant.avatarDefault,
@@ -72,12 +73,42 @@ class CommunityController extends StateNotifier<bool> {
     return _communityRepository.getUserCommunity(uid);
   }
 
-  Stream<Community> getCommunityByName(String name) {
-    return _communityRepository.getCommunityByName(name);
+  Stream<Community> getCommunityByName(String id) {
+    return _communityRepository.getCommunityByName(id);
   }
 
-  void editCommunity(BuildContext context, File? bannerFile, File? avatarFile,
+  void editCommunity(
+      BuildContext context,
+      File? bannerFile,
+      Uint8List? bannerWebFile,
+      File? avatarFile,
+      Uint8List? avatarWebFile,
       Community community) async {
+    if (bannerWebFile != null) {
+      state = true;
+      final res = await _ref.read(storageRepositoryProvider).storeFile(
+            path: 'communities/${community.name}',
+            uid: '/banner/${community.name}',
+            webFile: bannerWebFile,
+          );
+      res.fold((l) => showSnackBar(context, l.message), (r) {
+        community = community.copyWith(
+          banner: r,
+        );
+      });
+    }
+    if (avatarWebFile != null) {
+      final res = await _ref.read(storageRepositoryProvider).storeFile(
+            path: 'communities/${community.name}',
+            uid: '/avatar/${community.name}',
+            webFile: avatarWebFile,
+          );
+      res.fold((l) => showSnackBar(context, l.message), (r) {
+        community = community.copyWith(
+          avatar: r,
+        );
+      });
+    }
     if (bannerFile != null) {
       state = true;
       final res = await _ref.read(storageRepositoryProvider).storeFile(

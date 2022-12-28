@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_tutorial/core/common/enums/enums.dart';
 import 'package:reddit_tutorial/core/common/providers/firestorage_repository_provider.dart';
+import 'package:reddit_tutorial/core/common/utils/lang/app_localizations.dart';
 import 'package:reddit_tutorial/core/common/utils/utils.dart';
 import 'package:reddit_tutorial/features/auth/controller/auth_controller.dart';
 import 'package:reddit_tutorial/features/post/repository/post_repository.dart';
@@ -27,11 +29,8 @@ final getUserPostProvider =
   return postController.getUserPost(communities);
 });
 
-final getCommunityPostProvider =
-    StreamProvider.family((ref, String communityName) {
-  return ref
-      .watch(postControllerProvider.notifier)
-      .getCommunityPost(communityName);
+final getCommunityPostProvider = StreamProvider.family((ref, String id) {
+  return ref.watch(postControllerProvider.notifier).getCommunityPost(id);
 });
 
 final getUserPostsProvider = StreamProvider.family((ref, String uid) {
@@ -72,6 +71,7 @@ class PostController extends StateNotifier<bool> {
         title: title,
         type: 'text',
         communityName: selectedCommunity.name,
+        communityId: selectedCommunity.id,
         communityProfilePic: selectedCommunity.avatar,
         uid: user.uid,
         username: user.name,
@@ -97,14 +97,18 @@ class PostController extends StateNotifier<bool> {
     BuildContext context,
     Community selectedCommunity,
     String title,
-    File file,
+    File? file,
+    Uint8List? webFile,
   ) async {
     state = true;
     final user = _ref.read(userProvider)!;
     final postId = const Uuid().v1();
 
     final res = await _storageRepository.storeFile(
-        path: 'post/${selectedCommunity.name}', uid: postId, file: file);
+        path: 'post/${selectedCommunity.name}',
+        uid: postId,
+        file: file,
+        webFile: webFile);
 
     res.fold((l) => showSnackBar(context, l.message), (r) async {
       Post post;
@@ -113,6 +117,7 @@ class PostController extends StateNotifier<bool> {
         title: title,
         type: 'image',
         communityName: selectedCommunity.name,
+        communityId: selectedCommunity.id,
         communityProfilePic: selectedCommunity.avatar,
         uid: user.uid,
         username: user.name,
@@ -150,6 +155,7 @@ class PostController extends StateNotifier<bool> {
       title: title,
       type: 'link',
       communityName: selectedCommunity.name,
+      communityId: selectedCommunity.id,
       communityProfilePic: selectedCommunity.avatar,
       uid: user.uid,
       username: user.name,
@@ -187,7 +193,7 @@ class PostController extends StateNotifier<bool> {
         .updateUserKarma(Karma.delete);
     state = false;
     res.fold((l) => showSnackBar(context, l.message), (r) {
-      showSnackBar(context, 'post deleted successfully.');
+      showSnackBar(context, 'post deleted successfully');
     });
   }
 
@@ -201,8 +207,8 @@ class PostController extends StateNotifier<bool> {
     _postRepository.downvotes(post, uid);
   }
 
-  Stream<List<Post>> getCommunityPost(String communityName) {
-    return _postRepository.getCommunityPost(communityName);
+  Stream<List<Post>> getCommunityPost(String id) {
+    return _postRepository.getCommunityPost(id);
   }
 
   Stream<List<Post>> getUserPosts(uid) {
@@ -242,6 +248,7 @@ class PostController extends StateNotifier<bool> {
         .read(userProfileControllerProvider.notifier)
         .updateUserKarma(Karma.awardPost);
     res.fold((l) => showSnackBar(context, l.message), (r) {
+      Routemaster.of(context).pop();
       _ref.read(userProvider.notifier).update((state) {
         state?.awards.remove(award);
         return state;

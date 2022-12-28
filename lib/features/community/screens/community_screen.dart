@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_tutorial/core/common/error_text.dart';
 import 'package:reddit_tutorial/core/common/loader.dart';
 import 'package:reddit_tutorial/core/common/post_card.dart';
+import 'package:reddit_tutorial/core/common/responsive/responsive.dart';
 import 'package:reddit_tutorial/core/common/utils/lang/app_localizations.dart';
 import 'package:reddit_tutorial/features/auth/controller/auth_controller.dart';
 import 'package:reddit_tutorial/features/community/controller/community_contoller.dart';
@@ -14,11 +15,11 @@ import 'package:reddit_tutorial/models/community.dart';
 import 'package:routemaster/routemaster.dart';
 
 class CommunityScreen extends ConsumerWidget {
-  final String name;
-  const CommunityScreen({super.key, required this.name});
+  final String communityId;
+  const CommunityScreen({super.key, required this.communityId});
 
   void navigateToModTools(BuildContext context) {
-    Routemaster.of(context).push('/r/mod-tool/$name');
+    Routemaster.of(context).push('/r/mod-tool/$communityId');
   }
 
   void joinCommunity(
@@ -30,11 +31,13 @@ class CommunityScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (kDebugMode) print('community screen: $name');
+    print(communityId);
+    if (kDebugMode) print('community screen: $communityId');
+
     final user = ref.watch(userProvider)!;
     final isGest = !user.isAuthenticated;
     return Scaffold(
-      body: ref.watch(getCommunityByNameProvider(name)).when(
+      body: ref.watch(getCommunityByNameProvider(communityId)).when(
             data: (community) {
               return NestedScrollView(
                 headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -122,13 +125,13 @@ class CommunityScreen extends ConsumerWidget {
                     ),
                   ];
                 },
-                body: ref.watch(getCommunityPostProvider(name)).when(
+                body: ref.watch(getCommunityPostProvider(communityId)).when(
                     data: (posts) {
                       return ListView.builder(
                         itemCount: posts.length,
                         itemBuilder: (BuildContext context, int index) {
                           final post = posts[index];
-                          return PostCard(post: post);
+                          return Responsive(child: PostCard(post: post));
                         },
                       );
                     },

@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_tutorial/core/common/error_text.dart';
 import 'package:reddit_tutorial/core/common/loader.dart';
+import 'package:reddit_tutorial/core/common/responsive/responsive.dart';
 import 'package:reddit_tutorial/features/auth/controller/auth_controller.dart';
 import 'package:reddit_tutorial/features/community/controller/community_contoller.dart';
 import 'package:reddit_tutorial/models/community.dart';
 
 class AddModeratorScreen extends ConsumerStatefulWidget {
-  final String name;
+  final String communityId;
 
-  const AddModeratorScreen({super.key, required this.name});
+  const AddModeratorScreen({super.key, required this.communityId});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -39,7 +40,7 @@ class _AddModeratorScreenState extends ConsumerState<AddModeratorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ref.watch(getCommunityByNameProvider(widget.name)).when(
+    return ref.watch(getCommunityByNameProvider(widget.communityId)).when(
           data: (community) => Scaffold(
             appBar: AppBar(
               actions: [
@@ -59,18 +60,20 @@ class _AddModeratorScreenState extends ConsumerState<AddModeratorScreen> {
                         uids.add(user.uid);
                       }
 
-                      return ListTile(
-                        title: Text(user.name),
-                        trailing: Checkbox(
-                          value: uids.contains(user.uid),
-                          onChanged: (value) {
-                            ctl++;
-                            if (value!) {
-                              addUid(user.uid);
-                            } else {
-                              removedUid(user.uid);
-                            }
-                          },
+                      return Responsive(
+                        child: ListTile(
+                          title: Text(user.name),
+                          trailing: Checkbox(
+                            value: uids.contains(user.uid),
+                            onChanged: (value) {
+                              ctl++;
+                              if (value!) {
+                                addUid(user.uid);
+                              } else {
+                                removedUid(user.uid);
+                              }
+                            },
+                          ),
                         ),
                       );
                     },

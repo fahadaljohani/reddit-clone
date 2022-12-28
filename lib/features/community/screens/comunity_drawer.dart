@@ -17,7 +17,8 @@ class CommunityListDrawer extends ConsumerWidget {
   }
 
   void navigateToCommunity(BuildContext context, Community community) {
-    Routemaster.of(context).push('/r/${community.name}');
+    print(community);
+    Routemaster.of(context).push('/r/${community.id}');
   }
 
   @override
@@ -43,7 +44,9 @@ class CommunityListDrawer extends ConsumerWidget {
                         itemCount: communities.length,
                         itemBuilder: (BuildContext context, int index) {
                           print('drawer ref.watch rebuild');
+
                           final community = communities[index];
+                          print("debug: Community.name: ${community.name}");
                           return ListTile(
                             leading: CircleAvatar(
                               backgroundImage: NetworkImage(community.avatar),

@@ -7,6 +7,7 @@ class Post {
   final String? description;
   final String type;
   final String communityName;
+  final String communityId;
   final String communityProfilePic;
   final String uid;
   final String username;
@@ -22,6 +23,7 @@ class Post {
     this.description,
     required this.type,
     required this.communityName,
+    required this.communityId,
     required this.communityProfilePic,
     required this.uid,
     required this.username,
@@ -39,6 +41,7 @@ class Post {
     String? description,
     String? type,
     String? communityName,
+    String? communityId,
     String? communityProfilePic,
     String? uid,
     String? username,
@@ -55,6 +58,7 @@ class Post {
       description: description ?? this.description,
       type: type ?? this.type,
       communityName: communityName ?? this.communityName,
+      communityId: communityId ?? this.communityId,
       communityProfilePic: communityProfilePic ?? this.communityProfilePic,
       uid: uid ?? this.uid,
       username: username ?? this.username,
@@ -74,6 +78,7 @@ class Post {
       'description': description,
       'type': type,
       'communityName': communityName,
+      'communityId': communityId,
       'communityProfilePic': communityProfilePic,
       'uid': uid,
       'username': username,
@@ -94,6 +99,7 @@ class Post {
           map['description'] != null ? map['description'] as String : null,
       type: map['type'] as String,
       communityName: map['communityName'] as String,
+      communityId: map['communityId'] as String,
       communityProfilePic: map['communityProfilePic'] as String,
       uid: map['uid'] as String,
       username: map['username'] as String,
@@ -107,7 +113,7 @@ class Post {
 
   @override
   String toString() {
-    return 'Post(id: $id, title: $title, link: $link, description: $description, type: $type, communityName: $communityName, communityProfilePic: $communityProfilePic, uid: $uid, username: $username, createdAt: $createdAt, commentCount: $commentCount, upvotes: $upvotes, downvotes: $downvotes, awards: $awards)';
+    return 'Post(id: $id, title: $title, link: $link, description: $description, type: $type, communityName: $communityName, communityId: $communityId, communityProfilePic: $communityProfilePic, uid: $uid, username: $username, createdAt: $createdAt, commentCount: $commentCount, upvotes: $upvotes, downvotes: $downvotes, awards: $awards)';
   }
 
   @override
@@ -120,6 +126,7 @@ class Post {
         other.description == description &&
         other.type == type &&
         other.communityName == communityName &&
+        other.communityId == communityId &&
         other.communityProfilePic == communityProfilePic &&
         other.uid == uid &&
         other.username == username &&
@@ -138,6 +145,7 @@ class Post {
         description.hashCode ^
         type.hashCode ^
         communityName.hashCode ^
+        communityId.hashCode ^
         communityProfilePic.hashCode ^
         uid.hashCode ^
         username.hashCode ^

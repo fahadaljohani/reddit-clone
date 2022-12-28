@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:reddit_tutorial/core/common/failure.dart';
@@ -16,10 +17,18 @@ class StorageRepository {
       : _firebaseStorage = firebaseStorage;
 
   FutureEither<String> storeFile(
-      {required String path, required String uid, required File file}) async {
+      {required String path,
+      required String uid,
+      File? file,
+      Uint8List? webFile}) async {
     try {
       final ref = _firebaseStorage.ref().child(path).child(uid);
-      UploadTask uploadTask = ref.putFile(file);
+      UploadTask uploadTask;
+      if (webFile != null) {
+        uploadTask = ref.putData(webFile);
+      } else {
+        uploadTask = ref.putFile(file!);
+      }
       TaskSnapshot taskSnapshot = await uploadTask;
       String downloadUrl = await taskSnapshot.ref.getDownloadURL();
       return right(downloadUrl);

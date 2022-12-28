@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_tutorial/theme/pallete.dart';
@@ -13,56 +14,61 @@ class AddPostScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentTheme = ref.watch(themeNotifierProvider);
-    double cardWidthHight = 120;
-    double iconSize = 60;
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          GestureDetector(
-            onTap: () => navigateToAddPost(context, 'image'),
-            child: SizedBox(
-              height: cardWidthHight,
-              width: cardWidthHight,
-              child: Card(
-                child: Icon(
-                  Icons.image_outlined,
-                  size: iconSize,
-                  color: Pallete.whiteColor,
+    double cardWidthHight = kIsWeb ? 330 : 120;
+    double iconSize = kIsWeb ? 120 : 60;
+    return Scaffold(
+      appBar: AppBar(),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SafeArea(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                onTap: () => navigateToAddPost(context, 'image'),
+                child: SizedBox(
+                  height: cardWidthHight,
+                  width: cardWidthHight,
+                  child: Card(
+                    child: Icon(
+                      Icons.image_outlined,
+                      size: iconSize,
+                      color: Pallete.whiteColor,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () => navigateToAddPost(context, 'text'),
-            child: SizedBox(
-              height: cardWidthHight,
-              width: cardWidthHight,
-              child: Card(
-                child: Icon(
-                  Icons.font_download,
-                  size: iconSize,
-                  color: Pallete.whiteColor,
+              GestureDetector(
+                onTap: () => navigateToAddPost(context, 'text'),
+                child: SizedBox(
+                  height: cardWidthHight,
+                  width: cardWidthHight,
+                  child: Card(
+                    child: Icon(
+                      Icons.font_download,
+                      size: iconSize,
+                      color: Pallete.whiteColor,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () => navigateToAddPost(context, 'link'),
-            child: SizedBox(
-              height: cardWidthHight,
-              width: cardWidthHight,
-              child: Card(
-                child: Icon(
-                  Icons.link,
-                  size: iconSize,
-                  color: Pallete.whiteColor,
+              GestureDetector(
+                onTap: () => navigateToAddPost(context, 'link'),
+                child: SizedBox(
+                  height: cardWidthHight,
+                  width: cardWidthHight,
+                  child: Card(
+                    child: Icon(
+                      Icons.link,
+                      size: iconSize,
+                      color: Pallete.whiteColor,
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

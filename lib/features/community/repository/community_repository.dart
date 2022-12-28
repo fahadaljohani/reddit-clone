@@ -50,15 +50,15 @@ class CommunityRepository {
     });
   }
 
-  Stream<Community> getCommunityByName(String name) {
-    return _communities.doc(name).snapshots().map(
+  Stream<Community> getCommunityByName(String id) {
+    return _communities.doc(id).snapshots().map(
           (event) => Community.fromMap(event.data() as Map<String, dynamic>),
         );
   }
 
   FutureVoid editCommunity(Community community) async {
     try {
-      return right(_communities.doc(community.name).set(community.toMap()));
+      return right(_communities.doc(community.id).set(community.toMap()));
     } on FirebaseException catch (e) {
       throw e.message!;
     } catch (e) {
@@ -69,11 +69,11 @@ class CommunityRepository {
   FutureVoid joinCommunity(Community community, String uid) async {
     try {
       if (community.members.contains(uid)) {
-        return right(_communities.doc(community.name).update({
+        return right(_communities.doc(community.id).update({
           'members': FieldValue.arrayRemove([uid]),
         }));
       } else {
-        return right(_communities.doc(community.name).update({
+        return right(_communities.doc(community.id).update({
           'members': FieldValue.arrayUnion([uid]),
         }));
       }
@@ -106,7 +106,7 @@ class CommunityRepository {
 
   FutureVoid addMods(Community community, List<String> uids) async {
     try {
-      return right(_communities.doc(community.name).update({'mods': uids}));
+      return right(_communities.doc(community.id).update({'mods': uids}));
     } catch (e) {
       return left(Failure(e.toString()));
     }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_tutorial/core/common/error_text.dart';
 import 'package:reddit_tutorial/core/common/loader.dart';
+import 'package:reddit_tutorial/core/common/responsive/responsive.dart';
 import 'package:reddit_tutorial/features/community/controller/community_contoller.dart';
 import 'package:routemaster/routemaster.dart';
 
@@ -29,8 +30,8 @@ class SearchHomeScreenDelegate extends SearchDelegate {
     return const SizedBox();
   }
 
-  void navigateToCommunity(BuildContext context, String name) {
-    Routemaster.of(context).push('/r/$name');
+  void navigateToCommunity(BuildContext context, String id) {
+    Routemaster.of(context).push('/r/$id');
   }
 
   @override
@@ -42,7 +43,7 @@ class SearchHomeScreenDelegate extends SearchDelegate {
             itemBuilder: (BuildContext context, int index) {
               final community = communities[index];
               return ListTile(
-                onTap: () => navigateToCommunity(context, community.name),
+                onTap: () => navigateToCommunity(context, community.id),
                 leading: CircleAvatar(
                     backgroundImage: NetworkImage(community.avatar)),
                 title: Text(community.name),

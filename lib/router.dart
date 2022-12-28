@@ -5,7 +5,9 @@ import 'package:reddit_tutorial/features/community/screens/add_moderator.dart';
 import 'package:reddit_tutorial/features/community/screens/community_screen.dart';
 import 'package:reddit_tutorial/features/community/screens/edit_community_screen.dart';
 import 'package:reddit_tutorial/features/community/screens/mod_tool_screen.dart';
+import 'package:reddit_tutorial/features/feed/screens/feed_screen.dart';
 import 'package:reddit_tutorial/features/home/screens/home_screen.dart';
+import 'package:reddit_tutorial/features/post/screens/add_post_screen.dart';
 import 'package:reddit_tutorial/features/post/screens/add_post_type_screen.dart';
 import 'package:reddit_tutorial/features/post/screens/comment_screen.dart';
 import 'package:reddit_tutorial/features/profile/screens/edit_user_profile.dart';
@@ -25,22 +27,22 @@ final loggedInRoute = RouteMap(routes: {
   '/add-community': (_) => const MaterialPage(
         child: AddCommunity(),
       ),
-  '/r/:name': (route) => MaterialPage(
+  '/r/:id': (route) => MaterialPage(
         child: CommunityScreen(
-          name: route.pathParameters['name']!,
+          communityId: route.pathParameters['id']!,
         ),
       ),
-  '/r/mod-tool/:name': (route) => MaterialPage(
+  '/r/mod-tool/:id': (route) => MaterialPage(
         child: ModToolScreen(
-          name: route.pathParameters['name']!,
+          communityId: route.pathParameters['id']!,
         ),
       ),
-  '/r/edit-community/profile/:name': (route) => MaterialPage(
-        child: EditCommunityScreen(name: route.pathParameters['name']!),
+  '/r/edit-community/profile/:id': (route) => MaterialPage(
+        child: EditCommunityScreen(communityId: route.pathParameters['id']!),
       ),
-  '/r/edit-community/mod/:name': (route) => MaterialPage(
+  '/r/edit-community/mod/:id': (route) => MaterialPage(
         child: AddModeratorScreen(
-          name: route.pathParameters['name']!,
+          communityId: route.pathParameters['id']!,
         ),
       ),
   '/u/:uid': (route) => MaterialPage(
@@ -53,14 +55,16 @@ final loggedInRoute = RouteMap(routes: {
           uid: route.pathParameters['uid']!,
         ),
       ),
+  '/add-post': (_) => const MaterialPage(child: AddPostScreen()),
   '/add-post/:type': (route) => MaterialPage(
         child: AddPostTypeScreen(
           type: route.pathParameters['type']!,
         ),
       ),
-  '/r/:name/comments/:postId': (route) => MaterialPage(
+  '/r/:id/comments/:postId': (route) => MaterialPage(
         child: CommentScreen(
           postId: route.pathParameters['postId']!,
         ),
       ),
+  '/r/feed-screen': (route) => const MaterialPage(child: HomeScreen())
 });

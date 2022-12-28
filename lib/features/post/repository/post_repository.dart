@@ -104,9 +104,9 @@ class PostRepository {
     }
   }
 
-  Stream<List<Post>> getCommunityPost(String communityName) {
+  Stream<List<Post>> getCommunityPost(String communityId) {
     return _posts
-        .where('communityName', isEqualTo: communityName)
+        .where('communityId', isEqualTo: communityId)
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((event) => event.docs
@@ -160,9 +160,7 @@ class PostRepository {
   FutureVoid awardPost(Post post, String uid, String award) async {
     try {
       _users.doc(uid).update({
-        'awards': FieldValue.arrayRemove([
-          [award]
-        ])
+        'awards': FieldValue.arrayRemove([award])
       });
       _users.doc(post.uid).update({
         'awards': FieldValue.arrayUnion([award])

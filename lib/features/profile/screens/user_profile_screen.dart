@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_tutorial/core/common/error_text.dart';
 import 'package:reddit_tutorial/core/common/loader.dart';
 import 'package:reddit_tutorial/core/common/post_card.dart';
+import 'package:reddit_tutorial/core/common/responsive/responsive.dart';
 import 'package:reddit_tutorial/core/common/utils/lang/app_localizations.dart';
 import 'package:reddit_tutorial/features/auth/controller/auth_controller.dart';
 import 'package:reddit_tutorial/features/post/controller/post_controller.dart';
@@ -104,7 +105,7 @@ class UserProfileScreen extends ConsumerWidget {
                       itemCount: posts.length,
                       itemBuilder: (BuildContext context, int index) {
                         final post = posts[index];
-                        return PostCard(post: post);
+                        return Responsive(child: PostCard(post: post));
                       },
                     );
                   },
