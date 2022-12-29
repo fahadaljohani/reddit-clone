@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_tutorial/core/common/utils/lang/app_localizations.dart';
+import 'package:reddit_tutorial/core/common/widgets/abstract_factory.dart';
 import 'package:reddit_tutorial/core/common/widgets/abstract_navigation_bar.dart';
 import 'package:reddit_tutorial/core/constants/constant.dart';
 import 'package:reddit_tutorial/features/auth/controller/auth_controller.dart';
@@ -86,7 +87,7 @@ class _HomeScreenState extends ConsumerState {
       body: Constant.tabWidgets[_page],
       bottomNavigationBar: isGest || kIsWeb
           ? null
-          : AbstractPlatfrom(Theme.of(context).platform).navigtionBar(
+          : AbstractFactoryImp.navigationAdaptive(
               currentIndex: _page,
               onTap: (value) => goTo(value),
               activeColor: currentTheme.iconTheme.color,
@@ -95,6 +96,7 @@ class _HomeScreenState extends ConsumerState {
                 BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
                 BottomNavigationBarItem(icon: Icon(Icons.add), label: ''),
               ],
+              context: context,
             ),
     );
   }

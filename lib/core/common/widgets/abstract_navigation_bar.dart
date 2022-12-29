@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-abstract class AbstractPlatfrom {
+abstract class AbstractNavigationBar {
   Widget navigtionBar({
     required int currentIndex,
     required void Function(int)? onTap,
@@ -10,7 +10,7 @@ abstract class AbstractPlatfrom {
     required List<BottomNavigationBarItem> items,
   });
 
-  factory AbstractPlatfrom(TargetPlatform targetPlatform) {
+  factory AbstractNavigationBar(TargetPlatform targetPlatform) {
     switch (targetPlatform) {
       case TargetPlatform.android:
         return AndroidNavigationBar();
@@ -22,7 +22,7 @@ abstract class AbstractPlatfrom {
   }
 }
 
-class IOSNavigationBar implements AbstractPlatfrom {
+class IOSNavigationBar implements AbstractNavigationBar {
   @override
   Widget navigtionBar(
       {required int currentIndex,
@@ -39,7 +39,7 @@ class IOSNavigationBar implements AbstractPlatfrom {
   }
 }
 
-class AndroidNavigationBar implements AbstractPlatfrom {
+class AndroidNavigationBar implements AbstractNavigationBar {
   @override
   Widget navigtionBar(
       {required int currentIndex,
